@@ -1,0 +1,21 @@
+
+.addcard {
+  display: none;
+  
+}  
+.addcard:hover {
+  display: block;
+  
+}  
+
+
+.card{
+   border: none;
+   
+    
+}
+.card:hover{
+   border: none;
+    box-shadow: 5px 5px 5px 5px #dbd9d9a2;
+    
+}
