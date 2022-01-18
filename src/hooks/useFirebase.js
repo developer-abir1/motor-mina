@@ -1,8 +1,11 @@
-import React from 'react';
-import { GoogleAuthProvider, signOut, signInWithPopup } from "firebase/auth";
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { GoogleAuthProvider, signOut, signInWithPopup, getAuth, onAuthStateChanged } from "firebase/auth";
+import IntialFirebase from '../page/Login/FirebaseManeger/IntialFirebase';
 
 
+
+
+IntialFirebase()
 
 const useFirebase = () => {
 
@@ -18,7 +21,8 @@ const useFirebase = () => {
     const googleProdvider = new GoogleAuthProvider();
 
     const auth = getAuth();
-    const googleSingIn = () => {
+
+    const googleSingIn = (navigate, location) => {
         setIsLoading(true)
         signInWithPopup(auth, googleProdvider)
             .then((result) => {
@@ -29,7 +33,10 @@ const useFirebase = () => {
                 setUser(user)
                 setError("")
                 setSuccess(true)
-                setIsLoading(false)
+
+                const from = location.state?.from?.pathname || "/";
+
+                navigate(from)
                 // ...
             }).catch((error) => {
 
@@ -37,9 +44,25 @@ const useFirebase = () => {
                 setSuccess(false)
 
 
-            });
+            }).finally(() => setIsLoading(false))
+
     }
 
+
+
+    useEffect(() => {
+
+        const unsubscribed = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user)
+
+            } else {
+                setUser({})
+            }
+            setIsLoading(false)
+        });
+        return () => unsubscribed
+    }, [])
 
     // sing out mathod
     const logout = () => {
@@ -53,7 +76,12 @@ const useFirebase = () => {
 
     return {
         googleSingIn,
-        logout
+        logout,
+        user,
+        isLoading,
+        error,
+        success
+
     }
 };
 

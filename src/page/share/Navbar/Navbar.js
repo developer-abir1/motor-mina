@@ -1,8 +1,11 @@
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import useAuth from '../../../hooks/useAuth';
 import logo from "../../../image/logo.png"
 
 const Navbar = () => {
+    const { user, logout } = useAuth()
 
 
     return (
@@ -29,9 +32,14 @@ const Navbar = () => {
                             <li className="nav-item ms-3">
                                 <a className="nav-link fs-5"  >Admin</a>
                             </li>
-                            <li className="nav-item ms-3">
-                                <a className="nav-link  "  ><button className='btn btn-danger fs-6 text-uppercase rounded-pill'>Logout</button></a>
-                            </li>
+                            {user.email && <li className="nav-item ms-3">
+                                <a className="nav-link fs-5"  > {user.displayName}</a>
+                            </li>}
+
+                            {user.email && <li className="nav-item ms-3">
+                                <a className="nav-link  "  ><button onClick={logout} className='btn btn-danger fs-6 text-uppercase rounded-pill'>Logout</button></a>
+                            </li>}
+
 
                         </ul>
                     </div>
